@@ -1,4 +1,5 @@
 # omalley-fundraising
-D3 charts showing five key takeaways from O’Malley’s third quarter fundraising report.
+Five Key Takeaways From Martin O’Malley’s Third Quarter Fundraising Report
 
 ##live version:
+<a href="http://cnsmaryland.org/interactives/fall-2015-2/omalley-fundraising/index.html">click here</a>
