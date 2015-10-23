@@ -17,6 +17,10 @@ body {
   display: none;
 }
 
+.yaxis-text {
+  font-size: 1.5em;
+}
+
 .line {
   fill: none;
   stroke: #ffd500;
@@ -181,11 +185,12 @@ var data = [
       .attr("class", "y axis")
       .call(yAxis)
     .append("text")
+        .attr("class", "yaxis-text")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Amount ($)");
+      .text("Total Conributions by Date ($)");
 
    // append the x line
     focus.append("line")
