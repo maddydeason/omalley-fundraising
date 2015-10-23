@@ -18,13 +18,13 @@ h1, h2, h3, h5, h6 {
 	height: 15px;
 }
 
-a {
+.row a {
   text-decoration: none;
   color: #990000 !important;
   padding: 3px;
 }
 
-a:hover {
+.row a:hover {
   background-color: #ffd500;
   color: #fff !important;
   -webkit-transition: ease .2s;
