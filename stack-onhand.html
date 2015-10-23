@@ -138,7 +138,7 @@ var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
   .html(function(d) {
-    return  d.name + ": <span>" + d[y] + "</span>";
+    return  d.name + ": <span>" + d.values + "</span>";
   })
 
 var svg = d3.select("body").append("svg")
@@ -149,23 +149,34 @@ var svg = d3.select("body").append("svg")
 
 svg.call(tip);
 
-var data = [
+var data = [ //{
+  //candidate: ["Hilary Clinton", "Bernie Sanders", "Martin O'Malley", "Lincoln Chaffee"],
+  //series: [
+  //{
+    //label: "Spent",
+    //values: [42999965, 12834022, 2483739, 123675]
+  //},
+  //{
+    //label: "Remaining",
+    //values: [32995172, 27119721, 805986, 284526]
+  //},]
+  //}
   
-  //{candidate: "Hilary Clinton", Spent: 42999965, Remaining: 32995172},
-  //{candidate: "Bernie Sanders", Spent: 12834022, Remaining: 27119721},
-  //{candidate: "Martin O'Malley", Spent: 2483739, Remaining: 805986},
-  //{candidate: "Lincoln Chaffee", Spent: 123675, Remaining: 284526}
+  {candidate: "Hilary Clinton", Spent: 42999965, Remaining: 32995172},
+  {candidate: "Bernie Sanders", Spent: 12834022, Remaining: 27119721},
+  {candidate: "Martin O'Malley", Spent: 2483739, Remaining: 805986},
+  {candidate: "Lincoln Chaffee", Spent: 123675, Remaining: 284526}
 ];
 
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "candidate"; }));
 
   data.forEach(function(d) {
     var y0 = 0;
-    d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
-    d.ages.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
+    d.values = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+    d.values.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
   });
 
-  data.sort(function(a, b) { return b.ages[0].y1 - a.ages[0].y1; });
+  data.sort(function(a, b) { return b.values[0].y1 - a.values[0].y1; });
 
   x.domain(data.map(function(d) { return d.candidate; }));
 
@@ -185,7 +196,7 @@ var data = [
       .attr("transform", function(d) { return "translate(" + x(d.candidate) + ",0)"; });
 
   candidate.selectAll("rect")
-      .data(function(d) { return d.ages; })
+      .data(function(d) { return d.values; })
     .enter().append("rect")
       .attr("class", "rect")
       .attr("width", x.rangeBand())
@@ -196,7 +207,7 @@ var data = [
       .on('mouseout', tip.hide);
 
   var legend = svg.select(".candidate:last-child").selectAll(".legend")
-      .data(function(d) { return d.ages; })
+      .data(function(d) { return d.values; })
     .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d) { return "translate(" + x.rangeBand() / 1 + "," + y((d.y0 + d.y1) / 2) + ")"; });
