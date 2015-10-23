@@ -4,7 +4,7 @@
 <style>
 body {
   font-family: 'Roboto', sans-serif;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 /*-- CHART --*/
@@ -26,49 +26,6 @@ body {
 
 .rect:hover {
   opacity: .5;
-}
-
-/*-- TEXT --*/
-h1 {
-  font-size: 1.6em;
-  font-weight: 700;
-  margin-top: 1em;
-}
-
-h1, h2, h3 {
-  letter-spacing: .2px;
-}
-
-h2, h3 {
-  font-size: 1.2em;
-  font-weight: 400;
-}
-
-h3 {
-  font-size: 1em;
-  line-height: 16px;
-}
-a {
-  text-decoration: none;
-  color: #990000;
-  padding: 3px;
-}
-
-a:hover {
-  background-color: #ffd500;
-  color: #fff;
-  -webkit-transition: ease .2s;
-  -moz-transition: ease .2s;
-  transition: ease .2s;
-
-}
-
-.chart-header {
-  border-left: solid 5px #ffd500;
-  margin-left: 2em;
-  padding-left: 2em;
-  margin-bottom: 2em;
-  width: 500px;
 }
 
 /*-- TOOLTIP --*/
@@ -106,9 +63,9 @@ a:hover {
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script>
 
-var margin = {top: 20, right: 100, bottom: 30, left: 50},
-    width = 600 - margin.left - margin.right,
-    height = 450 - margin.top - margin.bottom;
+var margin = {top: 20, right: 100, bottom: 30, left: 35},
+    width = 320 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
 var x = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
@@ -156,10 +113,10 @@ var data = [ //{
   //},]
   //}
   
-  {candidate: "Hillary Clinton", Spent: 42999965, Remaining: 32995172},
-  {candidate: "Bernie Sanders", Spent: 12834022, Remaining: 27119721},
-  {candidate: "Martin O'Malley", Spent: 2483739, Remaining: 805986},
-  {candidate: "Lincoln Chaffee", Spent: 123675, Remaining: 284526}
+  {candidate: "Clinton", Spent: 42999965, Remaining: 32995172},
+  {candidate: "Sanders", Spent: 12834022, Remaining: 27119721},
+  {candidate: "O'Malley", Spent: 2483739, Remaining: 805986},
+  {candidate: "Chaffee", Spent: 123675, Remaining: 284526}
 ];
 
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "candidate"; }));

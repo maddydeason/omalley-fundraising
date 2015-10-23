@@ -4,7 +4,7 @@
   <style>
   body {
     font-family: 'Roboto', sans-serif;
-    font-size: 12px;
+    font-size: 9px;
   }
 
   /*-- CHART --*/
@@ -76,8 +76,8 @@
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script>
 $(document).ready(function(){
-  var margin = {top: 60, right: 20, bottom: 20, left: 80},
-      width = 550 - margin.left - margin.right,
+  var margin = {top: 50, right: 20, bottom: 20, left: 38},
+      width = 300 - margin.left - margin.right,
       height = 450 - margin.top - margin.bottom;
 
   var x = d3.scale.ordinal()
@@ -135,7 +135,7 @@ $(document).ready(function(){
       .call(yAxis)
     .append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", -60)
+      .attr("y", -40)
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .text("Total Spent (nearest thousand)");

@@ -5,7 +5,7 @@
 <style>
 body {
   font-family: 'Roboto', sans-serif;
-  font-size: 12px;
+  font-size: 9px;
 }
 
 /*-- CHART --*/
@@ -15,11 +15,13 @@ body {
 
 .chart text {
   fill: #222;
+  font-weight: 700;
   text-anchor: end;
 }
 
 .chart .label {
   fill: #222;
+  font-weight: 400;
   text-anchor: end;
 }
 
@@ -38,52 +40,17 @@ body {
 }
 
 /*-- TEXT --*/
-h1, h2, h3 {
-  letter-spacing: .2px;
-}
-
-h2, h3 {
-  font-size: 1.2em;
-  font-weight: 400;
-}
-
-h3 {
-  font-size: 1em;
-  line-height: 16px;
-}
-a {
-  text-decoration: none;
-  color: #990000;
-  padding: 3px;
-}
-
-a:hover {
-  background-color: #ffd500;
-  color: #fff;
-  -webkit-transition: ease .2s;
-  -moz-transition: ease .2s;
-  transition: ease .2s;
-
-}
 
 .chart-title {
   font-weight: 700;
-  margin-left: 120px;
+  margin-left: 80px;
   text-align: center;
-  width: 400px;
-}
-
-.chart-header {
-  border-left: solid 5px #ffd500;
-  margin-left: 2em;
-  padding-left: 2em;
-  margin-bottom: 3em;
-  width: 500px;
+  width: 200px;
 }
 
 </style>
 <body>
-<h2 class="chart-title">Total Contributions in Thousands <br>(rounded to the nearest thousand)</h2>
+<p class="chart-title">Total Contributions in Thousands <br>(rounded to the nearest thousand)</p>
 <svg class="chart"></svg>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script>
@@ -100,12 +67,12 @@ var data = {
     },]
 };
 
-var chartWidth       = 400,
+var chartWidth       = 190,
     barHeight        = 30,
     groupHeight      = barHeight * data.series.length,
     gapBetweenGroups = 10,
-    spaceForLabels   = 120,
-    spaceForLegend   = 150;
+    spaceForLabels   = 80,
+    spaceForLegend   = 100;
 
 // Zip the series data together (first values, second values, etc.)
 var zippedData = [];
@@ -151,9 +118,8 @@ bar.append("rect")
 
 // Add text label in bar
 bar.append("text")
-    .attr("x", function(d) { return x(d) + 30; })
+    .attr("x", function(d) { return x(d) + 7; })
     .attr("y", barHeight / 2)
-    .attr("fill", "red")
     .attr("dy", ".35em")
     .text(function(d) { return d; });
 
