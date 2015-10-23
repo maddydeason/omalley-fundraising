@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <style>
+  body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+  }
+
+  /*-- CHART --*/
+  .bar {
+    fill: #ffd500;
+  }
+
+  .bar:hover {
+    opacity: .5;
+    -webkit-transition: ease .2s;
+    -moz-transition: ease .2s;
+    transition: ease .2s;
+  }
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #444;
+    shape-rendering: crispEdges;
+  }
+
+  .x.axis path {
+    display: none;
+  }
+
+
+  /*-- TEXT --*/
+  h1 {
+  font-size: 1.6em;
+  font-weight: 700;
+  margin-top: 1em;
+  }
+
+  h1, h2, h3 {
+    letter-spacing: .2px;
+  }
+
+  h2, h3 {
+    font-size: 1.2em;
+    font-weight: 400;
+  }
+
+  h3 {
+    font-size: 1em;
+    line-height: 16px;
+  }
+  a {
+    text-decoration: none;
+    color: #990000;
+    padding: 3px;
+  }
+
+  a:hover {
+    background-color: #ffd500;
+    color: #fff;
+    -webkit-transition: ease .2s;
+    -moz-transition: ease .2s;
+    transition: ease .2s;
+
+  }
+
+  .header {
+    border-left: solid 5px #ffd500;
+    margin-left: 2em;
+    padding-left: 2em;
+    margin-bottom: 2em;
+    width: 500px;
+  }
+
+  /*-- TOOLTIP --*/
+  .d3-tip {
+    line-height: 1.5;
+    padding: 12px;
+    background: #222;
+    color: #fff;
+    border-radius: 2px;
+    text-align: center;
+    -webkit-transition: ease .2s;
+    -moz-transition: ease .2s;
+    transition: ease .2s;
+  }
+
+  /* Creates a small triangle extender for the tooltip */
+  .d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: #222;
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+    -webkit-transition: ease .2s;
+    -moz-transition: ease .2s;
+    transition: ease .2s;
+  }
+
+  /* Style northward tooltips differently */
+  .d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+  }
+  </style>
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+
+<body>
+  <div class="header">
+    <h1>Martin O'Malley Spends Most on Staff, Not Ads</h1>
+    <h2>Below are O'Malley's top five areas of expenditure (rounded to the nearest thousand).</h2>
+    <h3>by <a href="https://twitter.com/maddydeason/">Madeleine Deason</a> <a href="http://cnsmaryland.org/">(CAPITAL NEWS SERVICE)</a><br>SOURCE: Federal Election Commission</h3>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script>
+$(document).ready(function(){
+  var margin = {top: 40, right: 20, bottom: 40, left: 80},
+      width = 550 - margin.left - margin.right,
+      height = 450 - margin.top - margin.bottom;
+
+  var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+  var y = d3.scale.linear()
+    .range([height, 0]);
+
+  var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom");
+
+  var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left")
+
+  var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+      return "$" + d.spent + " thousand<br>" + d.percent + "%</span>";
+  });
+
+  var svg = d3.select("body").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  svg.call(tip);
+
+  var data = [
+  {what: "Staff", spent: 939, percent: 37.8},
+  {what: "Consulting", spent: 269, percent: 10.8},
+  {what: "Events", spent: 152, percent: 6.1},
+  {what: "Media & Ads", spent: 144, percent: 5.8},
+  {what: "Travel", spent: 115, percent: 4.6}
+];
+
+  x.domain(data.map(function(d) { return d.what; }));
+  y.domain([0, d3.max(data, function(d) { return d.spent; })]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "x-label")
+      .attr("y", 35)
+      .attr("dx", "35em")
+      .style("text-anchor", "center")
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", -60)
+      .attr("dy", "1em")
+      .style("text-anchor", "end")
+      .text("Total Spent (thousands of dollars)");
+
+  svg.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.what); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.spent); })
+      .attr("height", function(d) { return height - y(d.spent); })
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide);
+});
+
+</script>
+</body>
+</html>

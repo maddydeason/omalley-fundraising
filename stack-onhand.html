@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+<style>
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+}
+
+/*-- CHART --*/
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #222;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.legend line {
+  stroke: #222;
+  shape-rendering: crispEdges;
+}
+
+.rect:hover {
+  opacity: .5;
+}
+
+/*-- TEXT --*/
+h1 {
+  font-size: 1.6em;
+  font-weight: 700;
+  margin-top: 1em;
+}
+
+h1, h2, h3 {
+  letter-spacing: .2px;
+}
+
+h2, h3 {
+  font-size: 1.2em;
+  font-weight: 400;
+}
+
+h3 {
+  font-size: 1em;
+  line-height: 16px;
+}
+a {
+  text-decoration: none;
+  color: #990000;
+  padding: 3px;
+}
+
+a:hover {
+  background-color: #ffd500;
+  color: #fff;
+  -webkit-transition: ease .2s;
+  -moz-transition: ease .2s;
+  transition: ease .2s;
+
+}
+
+.header {
+  border-left: solid 5px #ffd500;
+  margin-left: 2em;
+  padding-left: 2em;
+  margin-bottom: 2em;
+  width: 500px;
+}
+
+/*-- TOOLTIP --*/
+.d3-tip {
+  line-height: 1;
+  padding: 12px;
+  background: #222;
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: #222;
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+</style>
+<body>
+  <div class="header">
+    <h1>Martin O'Malley Burns Through Funds</h1>
+    <h2>Martin O'Malley is using his funs faster than any other democratic canditate with only a fourth of his total contributions remaining.</h2>
+    <h3>by <a href="https://twitter.com/maddydeason/">Madeleine Deason</a> <a href="http://cnsmaryland.org/">(CAPITAL NEWS SERVICE)</a><br>SOURCE: Federal Election Commission</h3>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script>
+
+var margin = {top: 20, right: 100, bottom: 30, left: 50},
+    width = 600 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .rangeRound([height, 0]);
+
+var color = d3.scale.ordinal()
+    .range(["#ffd500", "#ccc"]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickFormat(d3.format(".0%"));
+
+var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return  d.name + ": <span>" + d[y] + "</span>";
+  })
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.call(tip);
+
+var data = [
+  
+  //{candidate: "Hilary Clinton", Spent: 42999965, Remaining: 32995172},
+  //{candidate: "Bernie Sanders", Spent: 12834022, Remaining: 27119721},
+  //{candidate: "Martin O'Malley", Spent: 2483739, Remaining: 805986},
+  //{candidate: "Lincoln Chaffee", Spent: 123675, Remaining: 284526}
+];
+
+  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "candidate"; }));
+
+  data.forEach(function(d) {
+    var y0 = 0;
+    d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+    d.ages.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
+  });
+
+  data.sort(function(a, b) { return b.ages[0].y1 - a.ages[0].y1; });
+
+  x.domain(data.map(function(d) { return d.candidate; }));
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+  var candidate = svg.selectAll(".candidate")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "candidate")
+      .attr("transform", function(d) { return "translate(" + x(d.candidate) + ",0)"; });
+
+  candidate.selectAll("rect")
+      .data(function(d) { return d.ages; })
+    .enter().append("rect")
+      .attr("class", "rect")
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.y1); })
+      .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+      .style("fill", function(d) { return color(d.name); })
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide);
+
+  var legend = svg.select(".candidate:last-child").selectAll(".legend")
+      .data(function(d) { return d.ages; })
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d) { return "translate(" + x.rangeBand() / 1 + "," + y((d.y0 + d.y1) / 2) + ")"; });
+
+  legend.append("line")
+      .attr("x2", 10);
+
+  legend.append("text")
+      .attr("x", 13)
+      .attr("dy", ".35em")
+      .text(function(d) { return "% " + d.name; });
+
+</script>

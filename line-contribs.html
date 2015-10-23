@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #222;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: #ffd500;
+  stroke-width:3px;
+}
+
+/*-- TEXT --*/
+  h1 {
+  font-size: 1.8em;
+  font-weight: 700;
+  margin-top: 1em;
+  }
+
+  h1, h2, h3 {
+    letter-spacing: .2px;
+  }
+
+  h2, h3 {
+    font-size: 1.4em;
+    font-weight: 400;
+  }
+
+  h3 {
+    font-size: 1.2em;
+    line-height: 16px;
+  }
+  a {
+    text-decoration: none;
+    color: #990000;
+    padding: 3px;
+  }
+
+  a:hover {
+    background-color: #ffd500;
+    color: #fff;
+    -webkit-transition: ease .2s;
+    -moz-transition: ease .2s;
+    transition: ease .2s;
+
+  }
+
+  .header {
+    border-left: solid 5px #ffd500;
+    margin-left: 2em;
+    padding-left: 2em;
+    margin-bottom: 2em;
+    width: 500px;
+  }
+
+</style>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+<body>
+  <div class="header">
+    <h1>Contributions for Martin O'Malley Shot Up in the Last Three Days of Quarter 3</h1>
+    <h2>More than half of this quarter's contributions were raised on the last day, Sept. 30.</h2>
+    <h3>by <a href="https://twitter.com/maddydeason/">Madeleine Deason</a> <a href="http://cnsmaryland.org/">(CAPITAL NEWS SERVICE)</a><br>SOURCE: Federal Election Commission</h3>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script>
+
+var margin = {top: 20, right: 50, bottom: 30, left: 60},
+    width = 600 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
+
+var parseDate = d3.time.format("%d-%b-%y").parse,
+    formatDate = d3.time.format("%d-%b"),
+    bisectDate = d3.bisector(function(d) { return d.date; }).left;
+
+var x = d3.time.scale()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var line = d3.svg.line()
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.amount); });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var lineSvg = svg.append("g"); 
+
+var focus = svg.append("g") 
+    .style("display", "none");
+
+var data = [
+  {date: "1-Jul-15", amount: 11550},
+  {date: "2-Jul-15", amount: 2800},
+  {date: "3-Jul-15", amount: 400},
+  {date: "4-Jul-15", amount: 1100},
+  {date: "5-Jul-15", amount: 550},
+  {date: "6-Jul-15", amount: 3130},
+  {date: "7-Jul-15", amount: 3070},
+  {date: "8-Jul-15", amount: 1000},
+  {date: "9-Jul-15", amount: 300},
+  {date: "10-Jul-15", amount: 9060},
+  {date: "11-Jul-15", amount: 50},
+  {date: "12-Jul-15", amount: 635},
+  {date: "13-Jul-15", amount: 6700},
+  {date: "14-Jul-15", amount: 1165},
+  {date: "15-Jul-15", amount: 3950},
+  {date: "16-Jul-15", amount: 460},
+  {date: "17-Jul-15", amount: 100},
+  {date: "18-Jul-15", amount: 750},
+  {date: "19-Jul-15", amount: 1100},
+  {date: "20-Jul-15", amount: 10525},
+  {date: "21-Jul-15", amount: 12850},
+  {date: "22-Jul-15", amount: 9565},
+  {date: "23-Jul-15", amount: 16905},
+  {date: "24-Jul-15", amount: 320},
+  {date: "25-Jul-15", amount: 4060},
+  {date: "26-Jul-15", amount: 22985},
+  {date: "27-Jul-15", amount: 20080},
+  {date: "28-Jul-15", amount: 11100},
+  {date: "29-Jul-15", amount: 18195},
+  {date: "31-Jul-15", amount: 31600},
+  {date: "1-Aug-15", amount: 6600},
+  {date: "2-Aug-15", amount: 2700},
+  {date: "3-Aug-15", amount: 7510},
+  {date: "4-Aug-15", amount: 8786},
+  {date: "5-Aug-15", amount: 7150},
+  {date: "6-Aug-15", amount: 7505},
+  {date: "7-Aug-15", amount: 5835},
+  {date: "8-Aug-15", amount: 1775},
+  {date: "9-Aug-15", amount: 0},
+  {date: "10-Aug-15", amount: 8545},
+  {date: "11-Aug-15", amount: 9810},
+  {date: "12-Aug-15", amount: 7876},
+  {date: "13-Aug-15", amount: 13895},
+  {date: "14-Aug-15", amount: 16030},
+  {date: "15-Aug-15", amount: 1510},
+  {date: "16-Aug-15", amount: 2000},
+  {date: "17-Aug-15", amount: 7160},
+  {date: "18-Aug-15", amount: 11175},
+  {date: "19-Aug-15", amount: 18785},
+  {date: "20-Aug-15", amount: 4910},
+  {date: "21-Aug-15", amount: 13240},
+  {date: "22-Aug-15", amount: 2065},
+  {date: "23-Aug-15", amount: 1000},
+  {date: "24-Aug-15", amount: 6025},
+  {date: "25-Aug-15", amount: 8675},
+  {date: "26-Aug-15", amount: 8600},
+  {date: "27-Aug-15", amount: 16735},
+  {date: "28-Aug-15", amount: 24400},
+  {date: "29-Aug-15", amount: 1850},
+  {date: "30-Aug-15", amount: 2910},
+  {date: "31-Aug-15", amount: 16625},
+  {date: "1-Sep-15", amount: 15935},
+  {date: "2-Sep-15", amount: 15200},
+  {date: "3-Sep-15", amount: 17900},
+  {date: "4-Sep-15", amount: 16100},
+  {date: "5-Sep-15", amount: 31585},
+  {date: "6-Sep-15", amount: 6050},
+  {date: "7-Sep-15", amount: 100},
+  {date: "8-Sep-15", amount: 29525},
+  {date: "9-Sep-15", amount: 10025},
+  {date: "10-Sep-15", amount: 23680},
+  {date: "11-Sep-15", amount: 21405},
+  {date: "12-Sep-15", amount: 26149},
+  {date: "13-Sep-15", amount: 1275},
+  {date: "14-Sep-15", amount: 15990},
+  {date: "15-Sep-15", amount: 5900},
+  {date: "16-Sep-15", amount: 12600},
+  {date: "17-Sep-15", amount: 17191},
+  {date: "18-Sep-15", amount: 12010},
+  {date: "19-Sep-15", amount: 26550},
+  {date: "20-Sep-15", amount: 3600},
+  {date: "21-Sep-15", amount: 9765},
+  {date: "22-Sep-15", amount: 20685},
+  {date: "23-Sep-15", amount: 3365},
+  {date: "24-Sep-15", amount: 20645},
+  {date: "25-Sep-15", amount: 18100},
+  {date: "26-Sep-15", amount: 5325},
+  {date: "27-Sep-15", amount: 7075},
+  {date: "28-Sep-15", amount: 49975},
+  {date: "29-Sep-15", amount: 50556},
+  {date: "30-Sep-15", amount: 110918}
+];
+
+  data.forEach(function(d) {
+    d.date = parseDate(d.date);
+    d.amount = +d.amount;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+  y.domain(d3.extent(data, function(d) { return d.amount; }));
+
+  lineSvg.append("path")
+        .attr("class", "line")
+        .attr("d", line(data));
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Amount ($)");
+
+   // append the x line
+    focus.append("line")
+        .attr("class", "x")
+        .style("stroke", "#990000")
+        .style("stroke-dasharray", "3,3")
+        .style("opacity", 0.5)
+        .attr("y1", 0)
+        .attr("y2", height);
+
+    // append the y line
+    focus.append("line")
+        .attr("class", "y")
+        .style("stroke", "#990000")
+        .style("stroke-dasharray", "3,3")
+        .style("opacity", 0.5)
+        .attr("x1", width)
+        .attr("x2", width);
+
+    // append the circle at the intersection
+    focus.append("circle")
+        .attr("class", "y")
+        .style("fill", "none")
+        .style("stroke", "#990000")
+        .attr("r", 4);
+
+    // place the value at the intersection
+    focus.append("text")
+        .attr("class", "y1")
+        .style("stroke", "white")
+        .style("stroke-width", "3.5px")
+        .style("opacity", 0.8)
+        .attr("dx", 8)
+        .attr("dy", "-.3em");
+    focus.append("text")
+        .attr("class", "y2")
+        .attr("dx", 8)
+        .attr("dy", "-.3em");
+
+    // place the date at the intersection
+    focus.append("text")
+        .attr("class", "y3")
+        .style("stroke", "white")
+        .style("stroke-width", "3.5px")
+        .style("opacity", 0.8)
+        .attr("dx", 8)
+        .attr("dy", "1em");
+    focus.append("text")
+        .attr("class", "y4")
+        .attr("dx", 8)
+        .attr("dy", "1em");
+    
+    // append the rectangle to capture mouse
+    svg.append("rect")
+        .attr("width", width)
+        .attr("height", height)
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .on("mouseover", function() { focus.style("display", null); })
+        .on("mouseout", function() { focus.style("display", "none"); })
+        .on("mousemove", mousemove);
+
+    function mousemove() {
+    var x0 = x.invert(d3.mouse(this)[0]),
+        i = bisectDate(data, x0, 1),
+        d0 = data[i - 1],
+        d1 = data[i],
+        d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+
+    focus.select("circle.y")
+        .attr("transform",
+              "translate(" + x(d.date) + "," +
+                             y(d.amount) + ")");
+
+    focus.select("text.y1")
+        .attr("transform",
+              "translate(" + x(d.date) + "," +
+                             y(d.amount) + ")")
+        .text("$" + (1*d.amount).toLocaleString());
+
+    focus.select("text.y2")
+        .attr("transform",
+              "translate(" + x(d.date) + "," +
+                             y(d.amount) + ")")
+        .text("$" + (1*d.amount).toLocaleString());
+
+    focus.select("text.y3")
+        .attr("transform",
+              "translate(" + x(d.date) + "," +
+                             y(d.amount) + ")")
+        .text(formatDate(d.date));
+
+    focus.select("text.y4")
+        .attr("transform",
+              "translate(" + x(d.date) + "," +
+                             y(d.amount) + ")")
+        .text(formatDate(d.date));
+
+    focus.select(".x")
+        .attr("transform",
+              "translate(" + x(d.date) + "," +
+                             y(d.amount) + ")")
+                   .attr("y2", height - y(d.amount));
+
+    focus.select(".y")
+        .attr("transform",
+              "translate(" + width * -1 + "," +
+                             y(d.amount) + ")")
+                   .attr("x2", width + width);
+  }
+
+</script>
+</body>
+</html>

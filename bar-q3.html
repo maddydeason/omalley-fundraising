@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+<style>
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+}
+
+/*-- CHART --*/
+.chart rect {
+  fill: #ffd500;
+}
+
+.chart text {
+  fill: #222;
+  text-anchor: end;
+}
+
+.chart .label {
+  fill: #222;
+  text-anchor: end;
+}
+
+.bar:hover {
+  opacity: .5;
+  -webkit-transition: ease .3s;
+  -moz-transition: ease .3s;
+  transition: ease .3s;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #222;
+  shape-rendering: crispEdges;
+}
+
+/*-- TEXT --*/
+h1 {
+  font-size: 1.6em;
+  font-weight: 700;
+  margin-top: 1em;
+}
+
+h1, h2, h3 {
+  letter-spacing: .2px;
+}
+
+h2, h3 {
+  font-size: 1.2em;
+  font-weight: 400;
+}
+
+h3 {
+  font-size: 1em;
+  line-height: 16px;
+}
+a {
+  text-decoration: none;
+  color: #990000;
+  padding: 3px;
+}
+
+a:hover {
+  background-color: #ffd500;
+  color: #fff;
+  -webkit-transition: ease .2s;
+  -moz-transition: ease .2s;
+  transition: ease .2s;
+
+}
+
+.chart-title {
+  font-weight: 700;
+  margin-left: 120px;
+  text-align: center;
+  width: 400px;
+}
+
+.header {
+  border-left: solid 5px #ffd500;
+  margin-left: 2em;
+  padding-left: 2em;
+  margin-bottom: 3em;
+  width: 500px;
+}
+
+</style>
+<body>
+  <div class="header">
+    <h1>Bulk of Martin O'Malley's Funding From Maryland</h1>
+    <h2>Martin O'Malley is still dependent on his base, Maryland, where he was governor for a year. By Comparisson, only 0.9 percent of Bernie Sanders' funding comes from Vermont, where he is Senator. Only 12.7 percent of Hilary Clinton's funds are from New York, which she represented in the Senate. The top 10 states and Puerto Rico contributing to O'Malley's campaign in Quarter 3 (July 1 to Sept. 30) are listed below.</h2>
+    <h3>by <a href="https://twitter.com/maddydeason/">Madeleine Deason</a> <a href="http://cnsmaryland.org/">(CAPITAL NEWS SERVICE)</a><br>SOURCE: Federal Election Commission</h3>
+  </div>
+  
+
+<h2 class="chart-title">Total Contributions in Thousands (rounded to the nearest thousand)</h2>
+<svg class="chart"></svg>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script>
+
+var data = {
+  labels: [
+    'Maryland', 'Massachusetts', 'California',
+    'Pennsylvania', 'Washington D.C.', 'New York', 'Virginia', 'New Hampsire', 'Puerto Rico', 'Iowa' 
+  ],
+  series: [
+    {
+      label: '',
+      values: [386, 57, 56, 53, 46, 46, 34, 29, 11, 11]
+    },]
+};
+
+var chartWidth       = 400,
+    barHeight        = 30,
+    groupHeight      = barHeight * data.series.length,
+    gapBetweenGroups = 10,
+    spaceForLabels   = 120,
+    spaceForLegend   = 150;
+
+// Zip the series data together (first values, second values, etc.)
+var zippedData = [];
+for (var i=0; i<data.labels.length; i++) {
+  for (var j=0; j<data.series.length; j++) {
+    zippedData.push(data.series[j].values[i]);
+  }
+}
+
+var chartHeight = barHeight * zippedData.length + gapBetweenGroups * data.labels.length;
+
+var x = d3.scale.linear()
+    .domain([0, d3.max(zippedData)])
+    .range([0, chartWidth]);
+
+var y = d3.scale.linear()
+    .range([chartHeight + gapBetweenGroups, 0]);
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .tickFormat('')
+    .tickSize(0)
+    .orient("left");
+
+// Specify the chart area and dimensions
+var chart = d3.select(".chart")
+    .attr("width", spaceForLabels + chartWidth + spaceForLegend)
+    .attr("height", chartHeight);
+
+// Create bars
+var bar = chart.selectAll("g")
+    .data(zippedData)
+    .enter().append("g")
+    .attr("transform", function(d, i) {
+      return "translate(" + spaceForLabels + "," + (i * barHeight + gapBetweenGroups * (0.5 + Math.floor(i/data.series.length))) + ")";
+    });
+
+// Create rectangles of the correct width
+bar.append("rect")
+    .attr("class", "bar")
+    .attr("width", x)
+    .attr("height", barHeight - 1);
+
+// Add text label in bar
+bar.append("text")
+    .attr("x", function(d) { return x(d) + 30; })
+    .attr("y", barHeight / 2)
+    .attr("fill", "red")
+    .attr("dy", ".35em")
+    .text(function(d) { return d; });
+
+// Draw labels
+bar.append("text")
+    .attr("class", "label")
+    .attr("x", function(d) { return - 10; })
+    .attr("y", groupHeight / 2)
+    .attr("dy", ".35em")
+    .text(function(d,i) {
+      if (i % data.series.length === 0)
+        return data.labels[Math.floor(i/data.series.length)];
+      else
+        return ""});
+
+chart.append("g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(" + spaceForLabels + ", " + -gapBetweenGroups/2 + ")")
+      .call(yAxis);
+</script>
+</body>
+</html>
