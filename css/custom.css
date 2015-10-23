@@ -4,7 +4,7 @@ body, h1, h2, h3, h4, h5, h6, p {
 	font-family: 'Roboto', sans-serif !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h5, h6 {
 	font-weight: 700 !important;
 }
 
@@ -34,4 +34,17 @@ a:hover {
 
 h3.number {
   margin-top: 1em;
+}
+
+div.footer {
+  background: #222;
+  border-top: 2px solid #ffd500;
+  color: #fff;
+  padding-top: 1em;
+  margin-top: 1em;
+  padding-bottom: 3em;
+}
+.footer p {
+  font-size: .8em;
+  margin: 0;
 }
