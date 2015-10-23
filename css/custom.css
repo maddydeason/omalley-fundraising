@@ -1,13 +1,38 @@
 /*custom CSS*/
+body {
+	font-size: 12px;
+}
 
+body, h1, h2, h3, h4, h5, h6, p {
+	font-family: 'Roboto', sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 700 !important;
+}
+
+/*--------- PAGE ----------*/
 .header {
-	font-family: 'Montserrat', sans-serif;
 	border-bottom: solid 2px #ffd500;
-	font-weight: 700;
 	letter-spacing: 1px;
 	margin: 1em 0 .5em 0;
 }
 
 .logo {
 	height: 15px;
+}
+
+a {
+  text-decoration: none;
+  color: #990000 !important;
+  padding: 3px;
+}
+
+a:hover {
+  background-color: #ffd500;
+  color: #fff !important;
+  -webkit-transition: ease .2s;
+  -moz-transition: ease .2s;
+  transition: ease .2s;
+
 }
